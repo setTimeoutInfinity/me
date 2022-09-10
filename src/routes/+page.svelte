@@ -1,10 +1,34 @@
-<script>
+<script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
+	import themeStore from '$lib/stores/theme';
+	import { themeChange } from 'theme-change';
 	import Briefcase from 'icons/Briefcase.svelte';
 	import Github from 'icons/Github.svelte';
 	import Globe from 'icons/Globe.svelte';
 	import Instagram from 'icons/Instagram.svelte';
 	import LinkedIn from 'icons/LinkedIn.svelte';
 	import Telegram from 'icons/Telegram.svelte';
+	import { getNextTheme, getThemeIcon, isTheme } from '$lib/utils/theme';
+	import { browser } from '$app/environment';
+	import { capitalizeWord } from '$lib/utils/typography';
+
+	let themeObserver: MutationObserver;
+
+	onMount(() => {
+		themeChange(false);
+		if (browser) {
+			themeObserver = new MutationObserver(function () {
+				if (isTheme(document?.documentElement?.dataset?.theme)) {
+					themeStore.set(document.documentElement.dataset.theme);
+				}
+			});
+			themeObserver.observe(document.documentElement, { attributes: true });
+		}
+	});
+	onDestroy(() => (themeObserver ? themeObserver.disconnect() : null));
+
+	$: themeIcon = getThemeIcon($themeStore);
+	$: nextTheme = getNextTheme($themeStore);
 </script>
 
 <div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
@@ -87,6 +111,11 @@
 
 	<!-- Pin to top right corner -->
 	<div class="absolute top-0 right-0 h-12 w-18 p-4">
-		<button class="js-change-theme focus:outline-none">🌙</button>
+		<button
+			class="tooltip tooltip-left"
+			data-set-theme={nextTheme}
+			data-act-class="ACTIVECLASS"
+			data-tip={capitalizeWord($themeStore)}>{themeIcon}</button
+		>
 	</div>
 </div>
