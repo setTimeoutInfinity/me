@@ -1,1 +1,5 @@
-// scss goes here
+// this is to fix daisy ui tooltip [issue](https://github.com/saadeghi/daisyui/issues/280)
+.tooltip::before {
+	max-width: 10rem;
+	word-break: break-word;
+}
