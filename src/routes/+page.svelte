@@ -5,6 +5,13 @@
 	import Instagram from 'icons/Instagram.svelte';
 	import LinkedIn from 'icons/LinkedIn.svelte';
 	import Telegram from 'icons/Telegram.svelte';
+
+	const socialLinks = [
+		{ link: 'https://github.com/setTimeoutInfinity', icon: Github },
+		{ link: 'https://t.me/talouchy', icon: Telegram },
+		{ link: 'https://www.instagram.com/talouchy_art/', icon: Instagram },
+		{ link: 'https://www.linkedin.com/in/danyallakzian', icon: LinkedIn }
+	];
 </script>
 
 <div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
@@ -36,19 +43,11 @@
 
 			<!-- Social links -->
 			<div class="flex flex-wrap gap-5 items-center justify-center pb-16">
-				<a class="link tooltip" href="https://github.com/setTimeoutInfinity" data-tip="https://github.com/setTimeoutInfinity">
-					<Github />
-				</a>
-
-				<a class="link tooltip" href="https://t.me/talouchy" data-tip="https://t.me/talouchy">
-					<Telegram />
-				</a>
-				<a class="link tooltip" href="https://www.instagram.com/talouchy_art/" data-tip="https://www.instagram.com/talouchy_art/">
-					<Instagram />
-				</a>
-				<a class="link tooltip" href="https://www.linkedin.com/in/danyallakzian" data-tip="https://www.linkedin.com/in/danyallakzian">
-					<LinkedIn />
-				</a>
+				{#each socialLinks as socialLink}
+					<a class="link tooltip" href={socialLink.link} data-tip={socialLink.link}>
+						<svelte:component this={socialLink.icon} />
+					</a>
+				{/each}
 			</div>
 		</div>
 	</div>
