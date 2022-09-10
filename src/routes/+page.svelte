@@ -35,9 +35,9 @@
 	<!--Main Col-->
 	<div
 		id="profile"
-		class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white opacity-75 mx-6 lg:mx-0"
+		class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white mx-6 lg:mx-0"
 	>
-		<div class="p-4 md:p-12 text-center lg:text-left">
+		<div class="p-4 text-center lg:text-left">
 			<!-- Image for mobile view -->
 			<div
 				class="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center"
@@ -50,9 +50,7 @@
 				<Briefcase />
 				<span>Software Engineer</span>
 			</p>
-			<p
-				class="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start"
-			>
+			<p class="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start">
 				<Globe />
 				<span>Melbourne, Australia</span>
 			</p>
@@ -60,16 +58,11 @@
 			<p class="pt-8 text-sm">Why beer??!! Cuz I can't drink Bacon!</p>
 
 			<div class="pt-12 pb-8">
-				<a
-					href="http://linkedin.lakzian.com"
-					target="_blank"
-					class="btn btn-active btn-accent btn-sm">My Resume</a
-				>
+				<a href="http://linkedin.lakzian.com" target="_blank" class="btn btn-active btn-accent btn-sm">My Resume</a>
 			</div>
 
-			<div
-				class="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap gap-5 items-center justify-center"
-			>
+			<!-- Social links -->
+			<div class="flex flex-wrap gap-5 items-center justify-center pb-16">
 				<a
 					class="link tooltip"
 					href="https://github.com/setTimeoutInfinity"
