@@ -2,7 +2,7 @@
 
 ## Developing
 
-`pnpm install` & start a development server `pnpm run dev`
+`npm install` & start a development server `npm run dev`
 
 ## Building
 
