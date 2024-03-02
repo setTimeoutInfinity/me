@@ -59,6 +59,7 @@ jobs:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             **/node_modules
+            app.yml
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run sveltkit check
@@ -92,6 +93,7 @@ jobs:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             **/node_modules
+            app.yml
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run build cmd
