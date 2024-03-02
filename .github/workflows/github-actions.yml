@@ -19,12 +19,12 @@ jobs:
         with:
           version: 8
 
-      - name: Get pnpm store directory
+      - name: Set pnpm store directory
         id: set-pnpm-store-path
         shell: bash
         run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Cache pnpm store
+      - name: Cache pnpm store directory
         id: cache-pnpm-store
         uses: actions/cache@v4
         with:
