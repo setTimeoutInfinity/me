@@ -134,9 +134,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-dir
+          path: ./build
 
       - name: Display structure of downloaded files
-        run: ls -la
+        run: ls -la && ls -la ./build
 
       - name: 'Google auth'
         id: 'auth'
@@ -149,4 +150,4 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Use gcloud CLI'
-        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'
+        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./build/app.yaml'

@@ -1,5 +1,5 @@
 runtime: nodejs20
-entrypoint: node ./index.js
+entrypoint: node ./build/index.js
 
 manual_scaling:
   instances: 1
