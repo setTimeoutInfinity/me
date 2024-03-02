@@ -32,7 +32,7 @@ jobs:
             ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
             ./node_modules
             ./app.yaml
-          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
           restore-keys: ${{ runner.os }}-app-dependencies-
 
       - name: Install Dependencies
@@ -47,7 +47,7 @@ jobs:
             ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
             ./node_modules
             ./app.yaml
-          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
 
   test:
     name: 🧪 Run Tests
@@ -70,7 +70,7 @@ jobs:
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             ./node_modules
             ./app.yaml
-          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
           restore-keys: ${{ runner.os }}-app-dependencies-
 
       - name: Run sveltkit check
