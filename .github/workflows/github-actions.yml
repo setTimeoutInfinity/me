@@ -44,10 +44,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: install-deps
     steps:
-      - env:
-          STORE_PATH: ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
-        run: echo " HAHAHA $STORE_PATH"
-
       - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v2
