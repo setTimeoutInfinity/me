@@ -111,14 +111,17 @@ jobs:
       - name: Run app build
         run: pnpm run check && pnpm run build
 
-      - name: Copy deploy yaml config
-        run: cp ./app.yaml ./build
+      - name: Prepare atrifact dir
+        run: |
+          mkdir ./artifact_dir
+          cp -R ./build/* ./artifact_dir/build && cp ./app.yaml ./artifact_dir/build
+          cp ./package.json ./artifact_dir
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-dir
-          path: ./build
+          name: build-output
+          path: ./artifact_dir
 
   deploy:
     name: 🚀 Deploy
@@ -132,8 +135,8 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-dir
-          path: ./build
+          name: build-output
+          path: ./
 
       - name: Display structure of downloaded files
         run: ls -la && ls -la ./build
