@@ -18,6 +18,7 @@ jobs:
       - name: 🗳️ Install Dependencies
         run: |
           npm install
+          npx playwright install
 
       - name: 🧪 Run Tests
         run: |
