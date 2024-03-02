@@ -72,3 +72,27 @@ jobs:
 
       - name: Run Tests
         run: pnpm run test
+
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+    needs: [install-deps, test]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '21'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Run build cmd
+        run: pnpm run build
