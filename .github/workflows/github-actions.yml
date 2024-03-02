@@ -17,11 +17,11 @@ jobs:
 
       - name: 🗳️ Install Dependencies
         run: |
-          npm install
-          npx playwright install
+          pnpm install
+          pnpm exec playwright install
 
       - name: 🧪 Run Tests
         run: |
-          npm run test
+          pnpm run test
 
       - run: echo "🍏 Test status is ${{ job.status }}."
