@@ -1,2 +1,2 @@
 runtime: nodejs20
-entrypoint: node ./build/index.js
+entrypoint: node ./index.js
