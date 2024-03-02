@@ -118,8 +118,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-dir
-          path: |
-            build
+          path: ./build
 
   deploy:
     name: 🚀 Deploy
