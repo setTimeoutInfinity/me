@@ -99,19 +99,20 @@ jobs:
         with:
           version: 8
 
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
         with:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
-            **/node_modules
-            app.yaml
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
 
-      - name: Run build cmd
+      - name: Run app build
         run: pnpm run check && pnpm run build
 
       - name: Copy deploy yaml config
-        run: cp app.yaml build
+        run: cp ./app.yaml ./build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
