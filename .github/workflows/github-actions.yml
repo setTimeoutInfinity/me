@@ -149,4 +149,4 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Use gcloud CLI'
-        run: 'gcloud app deploy --project teak-bebop-361609 ./build/app.yaml'
+        run: 'gcloud app deploy --project teak-bebop-361609 ./app.yaml'
