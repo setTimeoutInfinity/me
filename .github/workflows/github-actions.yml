@@ -95,4 +95,4 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run build cmd
-        run: pnpm run build
+        run: pnpm run check && pnpm run build
