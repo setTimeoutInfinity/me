@@ -24,19 +24,17 @@ jobs:
         shell: bash
         run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Cache pnpm store directory
-        id: cache-pnpm-store
-        uses: actions/cache@v4
+      - name: Cache app dependencies
+        id: cache-app-dependencies-save
+        uses: actions/cache/save@v4
         with:
           path: |
             ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
-            **/node_modules
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ./node_modules
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}
 
       - name: Install Dependencies
-        if: steps.cache-pnpm-store.outputs.cache-hit != 'true'
+        if: steps.cache-app-dependencies-save.outputs.cache-hit != 'true'
         run: pnpm install
 
   test:
@@ -54,13 +52,14 @@ jobs:
         with:
           version: 8
 
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
         with:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
-            **/node_modules
+            ./node_modules
             app.yml
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
 
       - name: Run sveltkit check
         run: pnpm run check
