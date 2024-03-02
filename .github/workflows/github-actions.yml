@@ -69,8 +69,8 @@ jobs:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             ./node_modules
-            app.yaml
-          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
           restore-keys: ${{ runner.os }}-app-dependencies-
 
       - name: Run sveltkit check
