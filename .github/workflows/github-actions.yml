@@ -116,7 +116,11 @@ jobs:
           name: build-dir
 
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -la
 
-      - name: Deploy
-        run: echo "Deploying"
+      - name: 'Google auth'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
