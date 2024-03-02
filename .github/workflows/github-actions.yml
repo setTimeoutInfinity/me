@@ -24,18 +24,30 @@ jobs:
         shell: bash
         run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
+      - name: restore Cached app dependencies
+        id: cache-app-dependencies-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
+
+      - name: Install Dependencies
+        if: steps.cache-app-dependencies-restore.outputs.cache-hit != 'true'
+        run: pnpm install
+
       - name: Cache app dependencies
-        id: cache-app-dependencies-save
+        if: steps.cache-app-dependencies-restore.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           path: |
             ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
             ./node_modules
-          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}
-
-      - name: Install Dependencies
-        if: steps.cache-app-dependencies-save.outputs.cache-hit != 'true'
-        run: pnpm install
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}-${{ hashFiles('./app.yaml') }}
 
   test:
     name: 🧪 Run Tests
@@ -57,7 +69,7 @@ jobs:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             ./node_modules
-            app.yml
+            app.yaml
           key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-app-dependencies-
 
@@ -92,14 +104,14 @@ jobs:
           path: |
             ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
             **/node_modules
-            app.yml
+            app.yaml
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run build cmd
         run: pnpm run check && pnpm run build
 
       - name: Copy deploy yaml config
-        run: cp app.yml build
+        run: cp app.yaml build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
