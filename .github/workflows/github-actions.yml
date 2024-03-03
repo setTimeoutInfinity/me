@@ -114,7 +114,7 @@ jobs:
       - name: Prepare atrifact dir
         run: |
           mkdir ./artifact_dir
-          cp -R ./build/* ./artifact_dir/build && cp ./app.yaml ./artifact_dir/build
+          cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir/build
           cp ./package.json ./artifact_dir
 
       - name: Upload build artifacts
