@@ -135,6 +135,10 @@ jobs:
       id-token: 'write'
 
     steps:
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -143,6 +147,9 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -la && ls -la ./build
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: 'Google auth'
         id: 'auth'
