@@ -117,6 +117,9 @@ jobs:
           cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir/build
           cp ./package.json ./artifact_dir
 
+      - name: Display structure
+        run: ls -la && ls -la ./artifact_dir && ls -la ./artifact_dir/build
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
