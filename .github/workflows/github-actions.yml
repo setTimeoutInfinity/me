@@ -114,7 +114,7 @@ jobs:
       - name: Prepare atrifact dir
         run: |
           mkdir ./artifact_dir
-          cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir/build
+          cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir
           cp ./package.json ./artifact_dir && cp ./pnpm-lock.yaml ./artifact_dir
 
       - name: Display structure
@@ -162,4 +162,4 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Use gcloud CLI'
-        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./build/app.yaml'
+        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'
