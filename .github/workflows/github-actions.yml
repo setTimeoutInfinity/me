@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: restore Cached app dependencies
+      - name: Restore cached app dependencies
         id: cache-app-dependencies-restore
         uses: actions/cache/restore@v4
         with:
@@ -76,7 +76,7 @@ jobs:
       - name: Run sveltkit check
         run: pnpm run check
 
-      - name: Intall playwrite broswer list
+      - name: Install playwrite broswer list
         run: pnpm exec playwright install
 
       - name: Run Lint Checks
