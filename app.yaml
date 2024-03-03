@@ -3,3 +3,7 @@ entrypoint: node ./build/index.js
 
 manual_scaling:
   instances: 1
+
+env_variables:
+  NODE_ENV: production
+  
