@@ -115,7 +115,7 @@ jobs:
         run: |
           mkdir ./artifact_dir
           cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir
-          cp ./package.json ./artifact_dir && cp ./pnpm-lock.yaml ./artifact_dir
+          cp ./package.json.prod ./artifact_dir/package.json
 
       - name: Display structure
         run: ls -la && ls -la ./artifact_dir && ls -la ./artifact_dir/build
