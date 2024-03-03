@@ -149,7 +149,7 @@ jobs:
         run: ls -la && ls -la ./build
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --prod
 
       - name: 'Google auth'
         id: 'auth'
