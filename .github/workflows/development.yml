@@ -1,6 +1,9 @@
-name: My Website Actions
+name: Development Workflows
 
-on: [push]
+on:
+  push:
+    branches:
+      - "master"
 
 jobs:
   install-deps:
@@ -163,3 +166,4 @@ jobs:
 
       - name: 'Use gcloud CLI'
         run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'
+      
