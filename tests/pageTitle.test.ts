@@ -1,13 +1,17 @@
-import { NAVIGATION_ITEMS } from '../src/lib/constants/navigation';
 import { expect, test } from '@playwright/test';
 
-test('page title of valid routes', async ({ page }) => {
-	await Promise.allSettled(
-		NAVIGATION_ITEMS.map(async (item) => {
-			await page.goto(item.path);
-			expect(await page.textContent('title')).toBe(`${item.title} - Danyal Lakzian`);
-		})
-	);
+test('home page title', async ({ page }) => {
+	await page.goto('/');
+
+	const title = await page.textContent('title');
+	expect(title).toEqual(`Home - Danyal Lakzian`);
+});
+
+test('my playlist page title', async ({ page }) => {
+	await page.goto('/my-playlist');
+
+	const title = await page.textContent('title');
+	expect(title).toEqual(`My Playlist - Danyal Lakzian`);
 });
 
 test('page title of invalid route', async ({ page }) => {
