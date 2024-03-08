@@ -41,7 +41,7 @@
 <PageTitle />
 
 <div>
-	<div class="navbar bg-base-100">
+	<div class="navbar bg-base-100 sticky top-0">
 		<div class="navbar-start">
 			<button
 				class="btn btn-square tooltip tooltip-right"
