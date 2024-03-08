@@ -1,0 +1,169 @@
+name: Deployment Workflows
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  install-deps:
+    name: 📦 Install Dependencies
+    runs-on: ubuntu-latest
+    outputs:
+      PNPM_STORE_PATH: ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Set pnpm store directory
+        id: set-pnpm-store-path
+        shell: bash
+        run: echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Restore cached app dependencies
+        id: cache-app-dependencies-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
+
+      - name: Install Dependencies
+        if: steps.cache-app-dependencies-restore.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: Cache app dependencies
+        if: steps.cache-app-dependencies-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ steps.set-pnpm-store-path.outputs.PNPM_STORE_PATH }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
+
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    needs: install-deps
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-app-dependencies-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
+
+      - name: Run sveltkit check
+        run: pnpm run check
+
+      - name: Install playwrite broswer list
+        run: pnpm exec playwright install
+
+      - name: Run Lint Checks
+        run: pnpm run lint
+
+      - name: Run Tests
+        run: pnpm run test
+
+  build:
+    name: 🏗️ Build app
+    runs-on: ubuntu-latest
+    needs: [install-deps, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ needs.install-deps.outputs.PNPM_STORE_PATH }}
+            ./node_modules
+            ./app.yaml
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('./pnpm-lock.yaml', './app.yaml') }}
+          restore-keys: ${{ runner.os }}-app-dependencies-
+
+      - name: Run app build
+        run: pnpm run check && pnpm run build
+
+      - name: Prepare atrifact dir
+        run: |
+          mkdir ./artifact_dir
+          cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir
+          cp ./package.json.prod ./artifact_dir/package.json
+
+      - name: Display structure
+        run: ls -la && ls -la ./artifact_dir && ls -la ./artifact_dir/build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: ./artifact_dir
+
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -la && ls -la ./build
+
+      - name: Install dependencies
+        run: pnpm install --prod
+
+      - name: 'Google auth'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'
+      
