@@ -3,7 +3,8 @@ name: Development Workflow
 on:
   push:
     branches:
-      - "!master"
+      - '*'
+      - '!master'
 
 jobs:
   install-deps:

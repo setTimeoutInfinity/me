@@ -3,7 +3,7 @@ name: Deployment Workflows
 on:
   push:
     branches:
-      - "master"
+      - 'master'
 
 jobs:
   install-deps:
@@ -166,4 +166,3 @@ jobs:
 
       - name: 'Use gcloud CLI'
         run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'
-      
