@@ -8,7 +8,7 @@
 
 <svelte:head>
 	{#if title}
-		<title>${title} - Danyal Lakzian</title>
+		<title>{title} - Danyal Lakzian</title>
 	{:else}
 		<title>Danyal Lakzian</title>
 	{/if}
