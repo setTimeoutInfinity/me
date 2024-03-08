@@ -5,9 +5,12 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { themeChange } from 'theme-change';
 	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
 	import themeStore from '$lib/stores/theme';
 	import { getNextTheme, getThemeIcon, isTheme } from '$lib/utils/theme';
 	import { capitalizeWord } from '$lib/utils/typography';
+	import PageTitle from '$lib/shared/pageTitle.svelte';
+	import { NAVIGATION_ITEMS } from '$lib/constants/navigation';
 
 	let themeObserver: MutationObserver;
 
@@ -26,14 +29,42 @@
 
 	$: themeIcon = getThemeIcon($themeStore);
 	$: nextTheme = getNextTheme($themeStore);
+	$: navOptions = NAVIGATION_ITEMS.map((item) => {
+		return {
+			...item,
+			active: $page.url.pathname === item.path
+		};
+	});
+	$: activeNavItemLabel = navOptions.find((item) => item.active)?.label || 'Menu';
 </script>
 
+<PageTitle />
+
 <div>
-	<!-- Pin to top right corner -->
-	<div class="absolute top-0 right-0 h-12 w-18 p-4">
-		<button class="tooltip tooltip-left" data-set-theme={nextTheme} data-act-class="ACTIVECLASS" data-tip={capitalizeWord($themeStore)}
-			>{themeIcon}</button
-		>
+	<div class="navbar bg-base-100">
+		<div class="navbar-start">
+			<button
+				class="btn btn-square tooltip tooltip-right"
+				data-set-theme={nextTheme}
+				data-act-class="ACTIVECLASS"
+				data-tip={capitalizeWord($themeStore)}
+			>
+				<span class="text-lg">{themeIcon}</span>
+			</button>
+		</div>
+		<div class="navbar-center"></div>
+		<div class="navbar-end">
+			<div class="dropdown dropdown-end">
+				<button tabindex="0" class="btn btn-ghost rounded-btn">{activeNavItemLabel}</button>
+				<ul tabindex="0" role="menu" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+					{#each navOptions as item}
+						<li>
+							<a href={item.path} class:active={item.active}>{item.label}</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		</div>
 	</div>
 	<slot />
 </div>
