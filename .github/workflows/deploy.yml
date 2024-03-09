@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'src/**'
-      - '!src/docs/**'
-      - '!src/tests/**'
-      - '!src/experiments/**'
 
 jobs:
   tests:
