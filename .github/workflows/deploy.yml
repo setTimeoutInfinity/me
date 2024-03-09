@@ -1,0 +1,85 @@
+name: 'Build & 🚀 Deploy'
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - '!src/docs/**'
+      - '!src/tests/**'
+      - '!src/experiments/**'
+
+jobs:
+  tests:
+    name: 🧪 Tests
+    uses: ./.github/workflows/tests.yml
+
+  build:
+    name: 🏗️ Build app
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Run app build
+        run: pnpm run build
+
+      - name: Prepare atrifact dir
+        run: |
+          mkdir ./artifact_dir
+          cp -R ./build ./artifact_dir && cp ./app.yaml ./artifact_dir
+          cp ./package.json.prod ./artifact_dir/package.json
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: ./artifact_dir
+
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./
+
+      - name: Install dependencies
+        run: pnpm install --prod
+
+      - name: 'Google auth'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud app deploy --quiet --project teak-bebop-361609 ./app.yaml'

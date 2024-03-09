@@ -1,0 +1,40 @@
+name: 🧪 Tests
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - '*'
+      - '!master'
+
+jobs:
+  tests:
+    timeout-minutes: 10
+    name: 'Tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Install playwrite broswer list
+        run: pnpm exec playwright install
+
+      - name: Run sveltkit check
+        run: pnpm run check
+
+      - name: Run Lint Checks
+        run: pnpm run lint
+
+      - name: Run Tests
+        run: pnpm run test
