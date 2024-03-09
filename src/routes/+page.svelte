@@ -1,28 +1,17 @@
 <script lang="ts">
+	import { SOCIAL_LINKS } from '$lib/constants/socialLinks';
 	import Briefcase from 'icons/Briefcase.svelte';
-	import Github from 'icons/Github.svelte';
 	import Globe from 'icons/Globe.svelte';
-	import Instagram from 'icons/Instagram.svelte';
-	import LinkedIn from 'icons/LinkedIn.svelte';
-	import Telegram from 'icons/Telegram.svelte';
-
-	const socialLinks = [
-		{ link: 'https://github.com/setTimeoutInfinity', icon: Github },
-		{ link: 'https://t.me/talouchy', icon: Telegram },
-		{ link: 'https://www.instagram.com/talouchy_art/', icon: Instagram },
-		{ link: 'https://www.linkedin.com/in/danyallakzian', icon: LinkedIn }
-	];
 </script>
 
-<div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
+<div class="flex flex-wrap items-center my-auto max-w-4xl mx-auto mt-20">
 	<!--Main Col-->
-	<div id="profile" class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white mx-6 lg:mx-0">
+	<div id="profile" class="h-fit w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none bg-base-200 mx-6 lg:mx-0">
 		<div class="p-4 text-center lg:text-left">
 			<!-- Image for mobile view -->
 			<div
 				class="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center"
-				style="background-image: url('/images/feel-fancy.webp')"
-			/>
+				style="background-image: url('/images/feel-fancy.webp')" />
 
 			<h1 class="text-3xl font-bold pt-8 lg:pt-0">Danyal Lakzian (aka D4)</h1>
 			<div class="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25" />
@@ -43,7 +32,7 @@
 
 			<!-- Social links -->
 			<div class="flex flex-wrap gap-5 items-center justify-center pb-16">
-				{#each socialLinks as socialLink}
+				{#each SOCIAL_LINKS as socialLink}
 					<a class="link tooltip" href={socialLink.link} data-tip={socialLink.link}>
 						<svelte:component this={socialLink.icon} />
 					</a>

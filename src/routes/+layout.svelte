@@ -1,16 +1,18 @@
 <script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
+	import { themeChange } from 'theme-change';
 	import '../app.css';
 	import '../styles/app.scss';
 
-	import { onDestroy, onMount } from 'svelte';
-	import { themeChange } from 'theme-change';
 	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
 	import themeStore from '$lib/stores/theme';
-	import { getNextTheme, getThemeIcon, isTheme } from '$lib/utils/theme';
+	import { isTheme } from '$lib/utils/theme';
 	import { capitalizeWord } from '$lib/utils/typography';
+
 	import PageTitle from '$lib/shared/pageTitle.svelte';
-	import { NAVIGATION_ITEMS } from '$lib/constants/navigation';
+	import NavCard from '$lib/shared/navCard.svelte';
+	import Footer from '$lib/shared/footer.svelte';
+	import { THEME_ICONS } from '$lib/constants/theme';
 
 	let themeObserver: MutationObserver;
 
@@ -26,45 +28,28 @@
 		}
 	});
 	onDestroy(() => (themeObserver ? themeObserver.disconnect() : null));
-
-	$: themeIcon = getThemeIcon($themeStore);
-	$: nextTheme = getNextTheme($themeStore);
-	$: navOptions = NAVIGATION_ITEMS.map((item) => {
-		return {
-			...item,
-			active: $page.url.pathname === item.path
-		};
-	});
-	$: activeNavItemLabel = navOptions.find((item) => item.active)?.label || 'Menu';
 </script>
 
 <PageTitle />
 
-<div>
-	<div class="navbar bg-base-100 sticky top-0 z-[1]">
-		<div class="navbar-start">
-			<button
-				class="btn btn-square tooltip tooltip-right"
-				data-set-theme={nextTheme}
-				data-act-class="ACTIVECLASS"
-				data-tip={capitalizeWord($themeStore)}
-			>
-				<span class="text-lg">{themeIcon}</span>
-			</button>
+<div class="w-full flex flex-col sm:flex-row flex-grow overflow-hidden">
+	<div class="flex flex-col gap-3 sm:w-1/3 md:1/4 w-full flex-shrink flex-grow-0 p-4 z-[1]">
+		<div class="sticky top-0 w-full">
+			<select class="select select-bordered w-full" data-choose-theme>
+				{#each Object.entries(THEME_ICONS) as [theme, themeEmoji]}
+					<option value={theme} selected={theme === $themeStore}>{themeEmoji} {capitalizeWord(theme)}</option>
+				{/each}
+			</select>
 		</div>
-		<div class="navbar-center"></div>
-		<div class="navbar-end">
-			<div class="dropdown dropdown-end">
-				<button tabindex="0" class="btn btn-ghost rounded-btn">{activeNavItemLabel}</button>
-				<ul tabindex="0" role="menu" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
-					{#each navOptions as item}
-						<li>
-							<a href={item.path} class:active={item.active}>{item.label}</a>
-						</li>
-					{/each}
-				</ul>
-			</div>
+
+		<div class="w-full">
+			<NavCard />
 		</div>
 	</div>
-	<slot />
+
+	<main class="w-full h-full flex-grow p-3 overflow-auto">
+		<slot />
+	</main>
 </div>
+
+<Footer />

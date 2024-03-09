@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { NAVIGATION_ITEMS } from '$lib/constants/navigation';
+	import { NAVIGATION_ITEMS, hasChildren } from '$lib/constants/navigation';
 
 	$: currentPath = $page.url.pathname;
-	$: title = NAVIGATION_ITEMS.find((item) => item.path === currentPath)?.title;
+	$: title = NAVIGATION_ITEMS.flatMap((item) => (hasChildren(item) ? item.children : [item])).find(
+		(item) => item.path === currentPath
+	)?.title;
 </script>
 
 <svelte:head>
