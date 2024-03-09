@@ -26,6 +26,11 @@ jobs:
           fetch-depth: 1
           clean: false
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
